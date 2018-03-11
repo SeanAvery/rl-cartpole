@@ -5,7 +5,7 @@ from keras.optimizers import Adam
 
 '''
     MODEL UTILS
-    from Model import * as model_utils
+    from Model import *
 '''
 
 '''
@@ -29,7 +29,7 @@ def build_model():
 def save_model(model, model_name):
     if not os.path.exists('./models'):
         os.makedirs('./models')
-    model_file = open('./models/{}.json'.format(model_name), 'wb')
+    model_file = open('./models/{}.json'.format(model_name), 'w')
     model_file.write(model)
     model_file.close()
 
