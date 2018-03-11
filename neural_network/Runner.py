@@ -1,18 +1,24 @@
 from Model import * as model_utils
 from Simulation import Simulation
+from Graph import Graph
 
 class Runner():
-    def __init__(self, model, Simulation):
+    def __init__(self, model, Simulation, Graph):
         self.model = model
         self.Simulation = Simulation
+        self.Graph =
 
     def run(self, is_training, num_episodes):
         for episode in range(num_episodes):
             old_state = self.Simulation.env.reset(1, self.Simulation.state_space)
             done = False
             total_reward = 0
+            ticks = 0
+            if not is_training:
+                this.Graph.init_results_graph()
 
             while not done:
+                ticks += 1
                 action = self.Simulation.choose_action(old_state)
                 new_state, reward, done, info = self.Simulation.env.step(action)
                 new_state = new_state.reshape(1, self.Simulation.env.observation_space.shape[0])
@@ -25,8 +31,7 @@ class Runner():
 
                 if done:
                     if not is_training:
-
-
+                        this.Graph.append_results_graph(episode, ticks)
                     break
 
             if do_train:
@@ -37,8 +42,8 @@ if __name__ == '__main__':
     model_utils.save_model(model)
 
     simulation = Simulation()
-
-    runner = Runner(model, simulation)
+    graph = Graph()
+    runner = Runner(model, simulation, graph)
 
     # training
     runner.run(True, 1000)

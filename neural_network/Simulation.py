@@ -23,7 +23,12 @@ class Simulation():
     def set_state_size(self):
         self.state_size = self.env.observation_space.shape[0]
 
-    def choose_action(self, ):
+    def choose_action(self, state):
+        if np.random.rand() <= self.epsilon:
+            return random.randrange(self.action_size)
+        else:
+            return np.argmax(self.model.predict(state)[0])
+
 
 
 ''' TESTING '''
