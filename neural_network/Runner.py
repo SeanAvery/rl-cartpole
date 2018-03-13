@@ -1,4 +1,4 @@
-from Model import * as model_utils
+from Model import *
 from Simulation import Simulation
 from Graph import Graph
 
@@ -6,18 +6,22 @@ class Runner():
     def __init__(self, model, Simulation, Graph):
         self.model = model
         self.Simulation = Simulation
-        self.Graph =
+        self.Graph = Graph
 
     def run(self, is_training, num_episodes):
+        if not is_training:
+            self.Graph.init_results_graph()
+
         for episode in range(num_episodes):
-            old_state = self.Simulation.env.reset(1, self.Simulation.state_space)
+            print('episode', episode)
+            old_state = self.Simulation.env.reset().reshape(1, self.Simulation.state_size)
             done = False
             total_reward = 0
             ticks = 0
-            if not is_training:
-                this.Graph.init_results_graph()
 
             while not done:
+                if not is_training:
+                    self.Simulation.env.render()
                 ticks += 1
                 action = self.Simulation.choose_action(old_state)
                 new_state, reward, done, info = self.Simulation.env.step(action)
@@ -31,22 +35,23 @@ class Runner():
 
                 if done:
                     if not is_training:
-                        this.Graph.append_results_graph(episode, ticks)
+                        self.Graph.append_results_graph(episode, ticks)
                     break
 
-            if do_train:
+            if is_training:
                 self.Simulation.replay()
+                self.model.save_weights()
 
 if __name__ == '__main__':
-    model = model_utils.build_model()
-    model_utils.save_model(model)
+    model = build_model()
+    save_model(model.to_json(), 'dense_model_1')
 
-    simulation = Simulation()
+    simulation = Simulation(model)
     graph = Graph()
     runner = Runner(model, simulation, graph)
 
     # training
-    runner.run(True, 1000)
+    runner.run(True, 10)
 
     # testing
-    runner.run(False, 200)
+    # runner.run(False, 20)
