@@ -1,5 +1,8 @@
 import os
-from keras.models import Sequential
+import h5py
+import numpy as np
+import keras
+from keras.models import Sequential, model_from_json
 from keras.layers import Dense
 from keras.optimizers import Adam
 
@@ -45,9 +48,36 @@ class Model():
         file_path = './models/{0}/{1}.h5'.format(self.model_name, self.weights_counter)
         self.model.save_weights(file_path)
 
+    def checkpoint_model(self):
+        keras.callbacks.ModelCheckpoint(
+            '{0}/{1}'.format(self.model_name, self.weights_counter),
+            monitor='val_loss',
+            verbose=0,
+            save_best_only=False,
+            save_weights_only=False,
+            mode='auto',
+            period=1)
+
+    def extract_layers(self):
+        for layer in self.model.layers:
+            weights = layer.get_weights()
+            print('weights', weights, type(weights), np.array(weights[0]).shape)
+
+    def load_model_graph(self, nonce):
+        weights = h5py.File('models/{0}/{1}.h5'.format(self.model_name, nonce), 'r+')
+        for thing in weights.keys():
+            data = list(weights[thing])[0]
+            print('data', data)
+            # print('thing', thing, type(thing))
+
+        print('weights', weights)
+        # self.model.load_weights('models/{0}/{1}.h5'.format(self.model_name, nonce))
+
+
 ''' TESTING '''
 if __name__ == '__main__':
     model = Model('dense_network')
     model.build_model()
     model.save_model()
     model.save_weights()
+    model.extract_layers()
