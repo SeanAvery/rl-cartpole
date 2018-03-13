@@ -43,6 +43,8 @@ class Simulation():
 
                 self.Model.model.fit(old_state, target_f, epochs=1, verbose=0)
 
+            self.Model.save_weights()
+
             if self.Model.epsilon > self.Model.epsilon_min:
                 self.Model.epsilon *= self.Model.epsilon_decay
 

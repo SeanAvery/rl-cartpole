@@ -3,8 +3,7 @@ from Simulation import Simulation
 from Graph import Graph
 
 class Runner():
-    def __init__(self, model, Simulation, Graph):
-        self.model = model
+    def __init__(self, Simulation, Graph):
         self.Simulation = Simulation
         self.Graph = Graph
 
@@ -40,7 +39,6 @@ class Runner():
 
             if is_training:
                 self.Simulation.replay()
-                self.model.save_weights()
 
 if __name__ == '__main__':
     model = Model('dense_network_1')
@@ -48,10 +46,10 @@ if __name__ == '__main__':
 
     simulation = Simulation(model)
     graph = Graph()
-    runner = Runner(model, simulation, graph)
+    runner = Runner(simulation, graph)
 
     # training
-    runner.run(True, 10)
+    runner.run(True, 1024)
 
     # testing
-    # runner.run(False, 20)
+    runner.run(False, 128)
