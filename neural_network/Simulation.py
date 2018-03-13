@@ -22,32 +22,26 @@ class Simulation():
     def choose_action(self, state):
         if np.random.rand() <= self.Model.epsilon:
             random_choice = random.randrange(self.action_size)
-            print('random choice', random_choice)
             return random_choice
         else:
-            choice = np.argmax(self.Model.predict(state)[0])
-            print('choice', choice)
+            choice = np.argmax(self.Model.model.predict(state)[0])
             return choice
 
     def replay(self):
-        if len(self.memory) < self.batch_size:
+        if len(self.memory) < self.Model.batch_size:
             return 0
         else:
             mini_batch = random.sample(self.memory, self.Model.batch_size)
             for old_state, action, reward, new_state, done in mini_batch:
                 if not done:
-                    target = (reward + self.Model.gamma * np.amax(self.Model.predict(new_state)))
-                    print('calculated target', target)
+                    target = (reward + self.Model.gamma * np.amax(self.Model.model.predict(new_state)))
                 else:
                     target = reward
-                    print('target', target)
 
-                target_f = self.Model.predict(old_state)
-                print('target_f', target_f)
+                target_f = self.Model.model.predict(old_state)
                 target_f[0][action] = target
 
-                self.Model.fit(old_state, target_f, epochs=1, verbose=0)
-                print('self.Model', self.Model)
+                self.Model.model.fit(old_state, target_f, epochs=1, verbose=0)
 
             if self.Model.epsilon > self.Model.epsilon_min:
                 self.Model.epsilon *= self.Model.epsilon_decay

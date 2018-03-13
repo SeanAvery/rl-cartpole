@@ -13,10 +13,8 @@ from keras.optimizers import Adam
 class Model():
     def __init__(self, model_name):
         self.model_name = model_name
-        self.build_model()
         # nonce for intermediate weight writes
         self.weights_counter = 0
-
 
         # hyperparemters
         self.alpha=0.1
@@ -26,6 +24,9 @@ class Model():
         self.epsilon_decay = 0.95
         self.epsilon_min = 0.05
         self.batch_size = 32
+
+        # int model
+        self.build_model()
 
 
     '''

@@ -1,4 +1,4 @@
-from Model import *
+from Model import Model
 from Simulation import Simulation
 from Graph import Graph
 
@@ -43,8 +43,8 @@ class Runner():
                 self.model.save_weights()
 
 if __name__ == '__main__':
-    model = build_model()
-    save_model(model.to_json(), 'dense_model_1')
+    model = Model('dense_network_1')
+    model.save_model()
 
     simulation = Simulation(model)
     graph = Graph()
