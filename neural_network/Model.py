@@ -17,6 +17,11 @@ class Model():
         # nonce for intermediate weight writes
         self.weights_counter = 0
 
+
+        # hyperparemters
+        self.alpha=0.1
+        self.alpha_decay=0.01
+
     '''
         returns keras model
             12 --> 12 --> 2 Dense Network
@@ -24,9 +29,9 @@ class Model():
     def build_model(self):
         model = Sequential()
         model.add(Dense(12, activation='relu', input_dim=4))
-        model.add(Dense(12, activation='relu'))
+        model.add(Dense(24, activation='relu'))
         model.add(Dense(2))
-        model.compile(Adam(lr=0.001), 'mse')
+        model.compile(optimizer=Adam(lr=self.alpha, decay=self.alpha_decay), loss='mse')
         self.model = model
 
     '''
