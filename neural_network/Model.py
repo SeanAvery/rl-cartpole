@@ -11,6 +11,8 @@ class Model():
     def __init__(self, model_name):
         self.model_name = model_name
         self.build_model()
+        # nonce for intermediate weight writes
+        self.weights_counter = 0
 
     '''
         returns keras model
@@ -34,13 +36,18 @@ class Model():
         if not os.path.exists('./models'):
             os.makedirs('./models')
         model_file = open('./models/{}.json'.format(self.model_name), 'w')
-        model_file.write(model)
+        model_file.write(self.model.to_json())
         model_file.close()
 
     def save_weights(self):
-
+        if not os.path.exists('./models/{}'.format(self.model_name)):
+            os.makedirs('./models/{}'.format(self.model_name))
+        file_path = './models/{0}/{1}.h5'.format(self.model_name, self.weights_counter)
+        self.model.save_weights(file_path)
 
 ''' TESTING '''
 if __name__ == '__main__':
-    model = build_model()
-    save_model(model.to_json(), 'dense_model_1')
+    model = Model('dense_network')
+    model.build_model()
+    model.save_model()
+    model.save_weights()
