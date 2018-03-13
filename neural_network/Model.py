@@ -21,6 +21,12 @@ class Model():
         # hyperparemters
         self.alpha=0.1
         self.alpha_decay=0.01
+        self.gamma = 0.99
+        self.epsilon = 1.0
+        self.epsilon_decay = 0.95
+        self.epsilon_min = 0.05
+        self.batch_size = 32
+
 
     '''
         returns keras model
