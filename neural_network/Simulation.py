@@ -27,26 +27,45 @@ class Simulation():
             choice = np.argmax(self.Model.model.predict(state)[0])
             return choice
 
+    # def replay(self):
+    #     if len(self.memory) < self.Model.batch_size:
+    #         return 0
+    #     else:
+    #         mini_batch = random.sample(self.memory, self.Model.batch_size)
+    #         for old_state, action, reward, new_state, done in mini_batch:
+    #             if not done:
+    #                 target = (reward + self.Model.gamma * np.amax(self.Model.model.predict(new_state)))
+    #             else:
+    #                 target = reward
+    #
+    #             target_f = self.Model.model.predict(old_state)
+    #             target_f[0][action] = target
+    #
+    #             self.Model.model.fit(old_state, target_f, epochs=1, verbose=0)
+    #
+    #         self.Model.save_weights()
+    #
+    #         if self.Model.epsilon > self.Model.epsilon_min:
+    #             self.Model.epsilon *= self.Model.epsilon_decay
+
     def replay(self):
-        if len(self.memory) < self.Model.batch_size:
-            return 0
-        else:
-            mini_batch = random.sample(self.memory, self.Model.batch_size)
-            for old_state, action, reward, new_state, done in mini_batch:
-                if not done:
-                    target = (reward + self.Model.gamma * np.amax(self.Model.model.predict(new_state)))
-                else:
-                    target = reward
+        x_batch, y_batch = [], []
+        mini_batch = random.sample(self.memory, min(len, self.memory, self.Model.batch_size))
 
-                target_f = self.Model.model.predict(old_state)
-                target_f[0][action] = target
+        for old_state, action, reward, new_state, done in mini_batch:
+            y_target = self.Model.model.predict(old_state)
+            print('y_target', y_target)
+            if done:
+                y_target[0][action] = reward
+            else:
+                y_target[0][action] = rward + self.Model.gamma * np.max(self.Model.model.predict(new_state)[0])
+            x_batch.append(state[0])
+            y_batch.append(y_target[0])
 
-                self.Model.model.fit(old_state, target_f, epochs=1, verbose=0)
+        self.model.fit(np.array(x_batch), np.array(y_batch), batch_size=len(x_batch), verbose=0)
 
-            self.Model.save_weights()
-
-            if self.Model.epsilon > self.Model.epsilon_min:
-                self.Model.epsilon *= self.Model.epsilon_decay
+        if self.Model.epsilon > self.Model.min_epsilon:
+            self.epsilon *= self.epsilon_decay
 
 ''' TESTING '''
 if __name__ == '__main__':
