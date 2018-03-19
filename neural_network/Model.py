@@ -21,7 +21,7 @@ class Model():
         self.alpha_decay=0.01
         self.gamma = 0.99
         self.epsilon = 1.0
-        self.epsilon_decay = 0.95
+        self.epsilon_decay = 0.9995
         self.epsilon_min = 0.05
         self.batch_size = 32
 
@@ -35,9 +35,9 @@ class Model():
     '''
     def build_model(self):
         model = Sequential()
-        model.add(Dense(12, activation='relu', input_dim=4))
-        model.add(Dense(24, activation='relu'))
-        model.add(Dense(2))
+        model.add(Dense(24, activation='relu', input_dim=4))
+        model.add(Dense(48, activation='relu'))
+        model.add(Dense(2, activation='linear'))
         model.compile(optimizer=Adam(lr=self.alpha, decay=self.alpha_decay), loss='mse')
         self.model = model
 

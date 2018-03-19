@@ -10,6 +10,7 @@ class Simulation():
 
     def build_gym(self):
         self.env = gym.make('CartPole-v0')
+        self.env.max_episode_steps = 500
         self.set_action_size()
         self.set_state_size()
 
@@ -24,7 +25,7 @@ class Simulation():
             random_choice = random.randrange(self.action_size)
             return random_choice
         else:
-            choice = np.argmax(self.Model.model.predict(state)[0])
+            choice = np.argmax(self.Model.model.predict(state))
             return choice
 
     # def replay(self):

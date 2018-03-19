@@ -30,7 +30,7 @@ class Runner():
                 if is_training:
                     self.Simulation.memory.append((old_state, action, reward, new_state, done))
 
-                new_state = old_state
+                old_state = new_state
 
                 if done:
                     if not is_training:
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     runner = Runner(simulation, graph)
 
     # training
-    runner.run(True, 1024)
+    runner.run(True, 4000)
 
     # testing
-    runner.run(False, 128)
+    runner.run(False, 400)
