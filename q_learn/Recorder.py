@@ -36,15 +36,25 @@ class Recorder():
         stat_info = os.stat('./simulations/{0}/{1}'.format(self.random_id, video_file))
         print('size', stat_info.st_size)
 
+    def choose_action(self, state):
+        print('state', state)
+        if state[2] < 0:
+            return 0
+        else:
+            return 1
+
 if __name__ == '__main__':
     recorder = Recorder()
-    env_temp = gym.make('CartPole-v0')
+    env = gym.make('CartPole-v0')
     env = recorder.wrap_env(env_temp)
-    env.reset()
-    for i in range(10):
-        env.render()
-        state, reward, done, _ = env.step(0)
+    state = env.reset()
 
+    while True:
+        env.render()
+        sleep(0.2)
+        action = recorder.choose_action(state)
+        print('action', action)
+        state, reward, done, _ = env.step(action)
         if done:
             break
 
