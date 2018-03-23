@@ -7,13 +7,13 @@ from Graph import Graph
 class Simulation():
     def __init__(self, graph):
         # graph utility for results
-        self.Graph = Graph
+        self.Graph = graph
 
         # environment
         self.env = gym.make('CartPole-v0')
 
         # state
-        self.buckets = (3, 3, 5, 11)
+        self.buckets = (3, 2, 8, 8)
         self.upper_bounds = [self.env.observation_space.high[0], 3.4, self.env.observation_space.high[2], 3.4]
         self.lower_bounds = [self.env.observation_space.low[0], -3.4, self.env.observation_space.low[2], -3.4]
         self.state_length = len(self.lower_bounds)
@@ -21,10 +21,10 @@ class Simulation():
         # model
         self.epsilon = 1
         self.min_epsilon = 0.05
-        self.epsilon_decay = 0.97
+        self.epsilon_decay = 0.999
         self.alpha = 1
         self.min_alpha = 0.05
-        self.alpha_decay = 0.97
+        self.alpha_decay = 0.999
         self.gamma = 0.995
         self.q_table = np.zeros(self.buckets + (self.env.action_space.n,))
 
@@ -54,7 +54,7 @@ class Simulation():
 
     def run(self, num_episodes, isTraining):
         if not isTraining:
-            self.Graph.init_results_graph(self)
+            self.Graph.init_results_graph()
         sleep(0.1)
         for i in range(num_episodes):
             old_state = self.reduce(self.env.reset())
@@ -72,10 +72,13 @@ class Simulation():
                     self.calc_epsilon()
                     self.calc_alpha()
                     if not isTraining:
-                        self.Graph.append_results_graph(self, i, ticks)
+                        self.Graph.append_results_graph(i, ticks)
                     break
 
         self.env.close()
+
+        # if not isTraining:
+        #     self.Graph.save_to_gif()
 
 if __name__ == '__main__':
     # init graph
@@ -83,7 +86,6 @@ if __name__ == '__main__':
     # init simulation
     simulation = Simulation(graph)
     # run training
-    simulation.run(10000 , True)
+    simulation.run(3000, True)
     # run tests
-    print('made it here!')
     simulation.run(100, False)
