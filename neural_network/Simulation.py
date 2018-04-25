@@ -28,27 +28,6 @@ class Simulation():
             choice = np.argmax(self.Model.model.predict(state))
             return choice
 
-    # def replay(self):
-    #     if len(self.memory) < self.Model.batch_size:
-    #         return 0
-    #     else:
-    #         mini_batch = random.sample(self.memory, self.Model.batch_size)
-    #         for old_state, action, reward, new_state, done in mini_batch:
-    #             if not done:
-    #                 target = (reward + self.Model.gamma * np.amax(self.Model.model.predict(new_state)))
-    #             else:
-    #                 target = reward
-    #
-    #             target_f = self.Model.model.predict(old_state)
-    #             target_f[0][action] = target
-    #
-    #             self.Model.model.fit(old_state, target_f, epochs=1, verbose=0)
-    #
-    #         self.Model.save_weights()
-    #
-    #         if self.Model.epsilon > self.Model.epsilon_min:
-    #             self.Model.epsilon *= self.Model.epsilon_decay
-
     def replay(self):
         x_batch, y_batch = [], []
         mini_batch = random.sample(self.memory, min(len(self.memory), self.Model.batch_size))
